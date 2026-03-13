@@ -17,7 +17,7 @@ class glucose(IntEnum):
 
 #Creates an object of the TimeTracker class
 #This class is used to track increases in the patients calculated score in the past 24 hours
-TrendTracker = TimeTracker()
+TrendTracker = TimeTracker.TimeTracker()
 
 #Function to calculate the Medi Score of a patient
 #Used as a basic measure to detect ill patients
@@ -28,7 +28,7 @@ def MediScoreCalculation(OnOxygen, Consciousness, RespirationRate, SPO2, Tempera
     score = 0
 
     #Calls the validating function to ensure all parameters are within the correct range, and then assigns their values in case of changes
-    NewParameters = ValidateParameters(OnOxygen, Consciousness, RespirationRate, SPO2, Temperature, CBG, Fasting)
+    NewParameters = ValidateParameters.ValidateParameters(OnOxygen, Consciousness, RespirationRate, SPO2, Temperature, CBG, Fasting)
     OnOxygen = NewParameters[0]
     Consciousness = NewParameters[1]
     RespirationRate = NewParameters[2]
