@@ -1,5 +1,7 @@
 from enum import IntEnum
 import TimeTracker
+import ValidateParameters
+
 #Uses enums to improve code readability
 class oxygen(IntEnum):
      yes = 2
@@ -24,6 +26,16 @@ TrendTracker = TimeTracker()
 def MediScoreCalculation(OnOxygen, Consciousness, RespirationRate, SPO2, Temperature, CBG, Fasting):
     #Sets initial score to zero, so it can be added to by each measured statistic
     score = 0
+
+    #Calls the validating function to ensure all parameters are within the correct range, and then assigns their values in case of changes
+    NewParameters = ValidateParameters(OnOxygen, Consciousness, RespirationRate, SPO2, Temperature, CBG, Fasting)
+    OnOxygen = NewParameters[0]
+    Consciousness = NewParameters[1]
+    RespirationRate = NewParameters[2]
+    SPO2 = NewParameters[3]
+    Temperature = NewParameters[4]
+    CBG = NewParameters[5]
+    Fasting = NewParameters[6]
 
     #Uses a match case statement to calculate the score increase from whether the patiuent currently requires supplemental oxygen
     #0 represents no oxygen, and 2 represents oxygen
@@ -103,7 +115,7 @@ def MediScoreCalculation(OnOxygen, Consciousness, RespirationRate, SPO2, Tempera
         score +=1
     elif Temperature > 39:
         score +=2
-
+    
     #Uses two if else statements to calculate the score increase from the patients capillary blood glucose
     #Needs two statements, since the score increases are dependent on if the patient is currently fasting or not
     #I was unsure if these new increases meant the score should still have a max of 14, or if the max should be increased to account for them
