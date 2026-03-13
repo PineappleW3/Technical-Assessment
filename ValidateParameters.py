@@ -54,9 +54,9 @@ def ValidateParameters(OnOxygen, Consciousness, RespirationRate, SPO2, Temperatu
         #If input is invalid, this code will be run again by repeat function calls
         match NewConsciousness:
                 case "y":
-                    Consciousness = conscious.yes
+                    Consciousness = int(conscious.yes)
                 case "n":
-                    Consciousness = conscious.no
+                    Consciousness = int(conscious.no)
 
         #Returns a repeat function call with newly inputted correct values
         return ValidateParameters(OnOxygen, Consciousness, RespirationRate, SPO2, Temperature, CBG, Fasting)
