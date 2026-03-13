@@ -97,7 +97,7 @@ def ValidateParameters(OnOxygen, Consciousness, RespirationRate, SPO2, Temperatu
 
     #Validates the Temperature parameter
     #Should be a float value to one decimal place
-    if type(Temperature) != float:
+    if type(Temperature) != float and type(Temperature) != int:
         print("Temparature outside of expected range.")
 
         #Casts input to float datatype as default datatype from input is string
@@ -114,7 +114,7 @@ def ValidateParameters(OnOxygen, Consciousness, RespirationRate, SPO2, Temperatu
     
     #Validates the CBG parameter
     #Should be a float value
-    if type(CBG) != float:
+    if type(CBG) != float and type(CBG) != int:
         print("CBG outside of expected range.")
 
         #Casts input to float datatype as default datatype from input is string
