@@ -1,6 +1,5 @@
 from enum import IntEnum
 import TimeTracker
-
 #Uses enums to improve code readability
 class oxygen(IntEnum):
      yes = 2
@@ -10,6 +9,10 @@ class conscious(IntEnum):
     yes = 0
     no = 1
 
+class glucose(IntEnum):
+    fasting = 0
+    eating = 1
+
 #Creates an object of the TimeTracker class
 #This class is used to track increases in the patients calculated score in the past 24 hours
 TrendTracker = TimeTracker()
@@ -17,7 +20,8 @@ TrendTracker = TimeTracker()
 #Function to calculate the Medi Score of a patient
 #Used as a basic measure to detect ill patients
 #Accounts for respiration rate, oxygen saturation, level of consciousness, temperature and whether the patient currently requires supplemental oxygen
-def MediScoreCalculation(OnOxygen, Consciousness, RespirationRate, SPO2, Temperature):
+#Also accounts for the capillary blood glucose, which can affect the score differently if the patient is fasting
+def MediScoreCalculation(OnOxygen, Consciousness, RespirationRate, SPO2, Temperature, CBG, Fasting):
     #Sets initial score to zero, so it can be added to by each measured statistic
     score = 0
 
@@ -99,7 +103,41 @@ def MediScoreCalculation(OnOxygen, Consciousness, RespirationRate, SPO2, Tempera
         score +=1
     elif Temperature > 39:
         score +=2
-    
+
+    #Uses two if else statements to calculate the score increase from the patients capillary blood glucose
+    #Needs two statements, since the score increases are dependent on if the patient is currently fasting or not
+    #I was unsure if these new increases meant the score should still have a max of 14, or if the max should be increased to account for them
+    #I chose to allow the max to increase along with the new source of points
+    if Fasting == glucose.fasting:
+        #If the patient is fasting, they gain three points if the value is less than or equal to 3.4, or greater than 6
+        #They will gain 2 points for values in the ranges 3.5-3.9 and 5.5-5.9, and none for 4-5.4
+        if CBG <= 3.4:
+            score +=3
+        elif CBG > 3.4 and CBG <= 3.9:
+            score +=2
+        elif CBG > 3.9 and CBG <= 5.4:
+            pass
+        elif CBG > 5.4 and CBG <= 5.9:
+            score +=2
+        elif CBG > 5.9:
+            score +=3
+
+    else:
+        #If the patient is 2 hours after eating, they gain three points if the value is less than or equal to 4.5, or greater than 9
+        #They will gain 2 points for values in the ranges 4.6-5.8 and 7.9-8.9, and none for 5.9-7.8
+        #In the initial documentation one of the ranges is listed as 4.5-5.8, however this would mean that a value of 4.5 would qualify for both 2 and 3 points
+        #For this reason, I have changed the interval to 4.6-5.8
+        if CBG <= 4.5:
+            score +=3
+        elif CBG > 4.5 and CBG <= 5.8:
+            score +=2
+        elif CBG > 5.8 and CBG <= 7.8:
+            pass
+        elif CBG > 7.8 and CBG <= 8.9:
+            score +=2
+        elif CBG > 8.9:
+            score +=3
+
     #Uses the Tracker object to find any rising trends in the score, and alerts the user if any are found
     Concerns = TrendTracker.AddScore(score)
     if Concerns == 1:
