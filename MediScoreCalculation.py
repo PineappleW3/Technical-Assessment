@@ -1,4 +1,5 @@
 from enum import IntEnum
+import TimeTracker
 
 #Uses enums to improve code readability
 class oxygen(IntEnum):
@@ -8,6 +9,10 @@ class oxygen(IntEnum):
 class conscious(IntEnum):
     yes = 0
     no = 1
+
+#Creates an object of the TimeTracker class
+#This class is used to track increases in the patients calculated score in the past 24 hours
+TrendTracker = TimeTracker()
 
 #Function to calculate the Medi Score of a patient
 #Used as a basic measure to detect ill patients
@@ -95,5 +100,9 @@ def MediScoreCalculation(OnOxygen, Consciousness, RespirationRate, SPO2, Tempera
     elif Temperature > 39:
         score +=2
     
+    #Uses the Tracker object to find any rising trends in the score, and alerts the user if any are found
+    Concerns = TrendTracker.AddScore(score)
+    if Concerns == 1:
+        print("The patients calculated score has risen by more than 2 over the past 24 hours. This could indicate additional risks to their health.")
 
     return score
